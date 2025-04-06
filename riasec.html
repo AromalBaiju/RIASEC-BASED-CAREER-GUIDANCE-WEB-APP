@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Guidance Quiz</title>
+    <style>
+        :root {
+            --primary: #FF6B6B;
+            --primary-light: #FF8E8E;
+            --secondary: #4ECDC4;
+            --accent: #FFD166;
+            --text: #2D3436;
+            --bg: #F7FFF7;
+            --card-bg: #FFFFFF;
+            --shadow: rgba(45, 52, 54, 0.1);
+            --success: #06D6A0;
+            --progress-bg: #E0E0E0;
+            --progress-fill: #4ECDC4;
+            --card-border: #E0E0E0;
+            --font-main: 'Comic Neue', cursive;
+            --font-title: 'Fredoka One', cursive;
+        }
+
+        [data-theme="dark"] {
+            --primary: #FF9E7D;
+            --primary-light: #FFBEA3;
+            --secondary: #7FDBFF;
+            --accent: #FFDC00;
+            --text: #F5F5F5;
+            --bg: #1A1A2E;
+            --card-bg: #16213E;
+            --shadow: rgba(255, 255, 255, 0.1);
+            --success: #2ECC71;
+            --progress-bg: #2D3748;
+            --progress-fill: #7FDBFF;
+            --card-border: #2D3748;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Fredoka+One&display=swap');
+
+        body {
+            font-family: var(--font-main);
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: var(--text);
+            background-color: var(--bg);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .moving-dots {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .dot {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            opacity: 0.3;
+            animation: float 15s infinite linear;
+        }
+
+        .dot:nth-child(2n) {
+            background-color: var(--secondary);
+            animation-duration: 20s;
+            animation-direction: reverse;
+        }
+
+        .dot:nth-child(3n) {
+            background-color: var(--accent);
+            animation-duration: 25s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            100% {
+                transform: translate(100vw, 100vh) rotate(360deg);
+            }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px var(--shadow);
+            background-color: var(--card-bg);
+            border: 4px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 2px dashed var(--primary);
+            border-radius: 25px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        h1, h2, h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            font-family: var(--font-title);
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .theme-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 5px 10px;
+            border-radius: 20px;
+            border: 2px solid var(--accent);
+        }
+
+        .theme-switch label {
+            margin-right: 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--progress-bg);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin: 10px 5px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: inline-block;
+            font-family: var(--font-title);
+            letter-spacing: 0.5px;
+            border: 2px solid white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 3px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 2rem;
+        }
+
+        .question {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px var(--shadow);
+            border: 3px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .question::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+        }
+
+        .options {
+            margin-top: 20px;
+        }
+
+        .option {
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .option input[type="radio"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            outline: none;
+            cursor: pointer;
+            margin-right: 10px;
+            position: relative;
+        }
+
+        .option input[type="radio"]:checked {
+            background-color: var(--primary);
+        }
+
+        .option input[type="radio"]:checked::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .option label {
+            margin-left: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .progress-bar {
+            flex-grow: 1;
+            height: 12px;
+            background-color: var(--progress-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-right: 10px;
+            border: 2px solid var(--accent);
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .result-category {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 12px var(--shadow);
+            border: 3px solid var(--accent);
+        }
+
+        .career-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .career-item {
+            background-color: var(--bg);
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .quiz-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .quiz-counter {
+            font-size: 1rem;
+            color: var(--text);
+            font-weight: bold;
+            background-color: var(--accent);
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .result-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .result-description {
+            font-size: 1rem;
+            color: var(--text);
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+
+        .top-result {
+            border: 3px solid var(--primary);
+            background-color: rgba(255, 107, 107, 0.1);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.01); }
+            100% { transform: scale(1); }
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            position: relative;
+            height: 300px;
+        }
+
+        .pie-chart {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            animation: grow 1.5s ease-out forwards;
+            transform: scale(0);
+        }
+
+        @keyframes grow {
+            to { transform: scale(1); }
+        }
+
+        .chart-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-right: 8px;
+            border: 2px solid white;
+        }
+
+        .about-section, .developer-info {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 4px 12px var(--shadow);
+            border: 3px solid var(--accent);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 15px;
+            background-color: var(--bg);
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            text-decoration: none;
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .social-icon {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 1rem;
+            border-bottom: 3px solid var(--accent);
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            background: var(--bg);
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--text);
+            font-family: var(--font-title);
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            flex: 1;
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .character {
+            position: absolute;
+            font-size: 3rem;
+            z-index: -1;
+            opacity: 0.2;
+        }
+
+        .character-1 {
+            top: 20px;
+            left: 20px;
+        }
+
+        .character-2 {
+            bottom: 20px;
+            right: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                margin: 5px 0;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .tab-buttons {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="moving-dots" id="moving-dots"></div>
+    
+    <div class="theme-switch">
+        <label for="theme-toggle">🌙 Dark</label>
+        <label class="switch">
+            <input type="checkbox" id="theme-toggle" onchange="toggleTheme()">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="container">
+        <div class="character character-1">👩‍🔬</div>
+        <div class="character character-2">👨‍🎨</div>
+        
+        <div id="intro-screen">
+            <h1>Career Guidance Quiz</h1>
+            <p>Discover your career interests based on the Holland Code (RIASEC) model.</p>
+            
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="openTab('quiz-tab')">Take Quiz</button>
+                <button class="tab-btn" onclick="openTab('about-tab')">About RIASEC</button>
+                <button class="tab-btn" onclick="openTab('developer-tab')">Developer</button>
+            </div>
+            
+            <div id="quiz-tab" class="tab-content active">
+                <p>Choose your test length:</p>
+                <div class="btn-group">
+                    <button class="btn" onclick="startQuiz(12)">Quick Test<br><small>12 questions</small></button>
+                    <button class="btn" onclick="startQuiz(36)">Standard Test<br><small>36 questions</small></button>
+                    <button class="btn" onclick="startQuiz(60)">Comprehensive Test<br><small>60 questions</small></button>
+                </div>
+            </div>
+            
+            <div id="about-tab" class="tab-content">
+                <div class="about-section">
+                    <h3>About the RIASEC Model</h3>
+                    <p>The RIASEC model, also known as the Holland Code, is a theory of careers and vocational choice based upon personality types developed by psychologist John L. Holland.</p>
+                    
+                    <p>The model identifies six personality types:</p>
+                    <ul class="career-list">
+                        <li class="career-item"><strong>Realistic (Doers)</strong>: Practical, physical, hands-on, tool-oriented people</li>
+                        <li class="career-item"><strong>Investigative (Thinkers)</strong>: Analytical, intellectual, scientific, explorative people</li>
+                        <li class="career-item"><strong>Artistic (Creators)</strong>: Creative, original, independent, chaotic, expressive people</li>
+                        <li class="career-item"><strong>Social (Helpers)</strong>: Cooperative, supporting, helping, healing/nurturing people</li>
+                        <li class="career-item"><strong>Enterprising (Persuaders)</strong>: Competitive environments, leadership, persuading people</li>
+                        <li class="career-item"><strong>Conventional (Organizers)</strong>: Detail-oriented, organizing, clerical people</li>
+                    </ul>
+                    
+                    <p>The theory proposes that people and work environments can be classified into these six types, and that the best career choices happen when there's a good match between personality type and work environment.</p>
+                    
+                    <button class="btn btn-outline" onclick="openTab('quiz-tab')">Take the Quiz</button>
+                </div>
+            </div>
+            
+            <div id="developer-tab" class="tab-content">
+                <div class="developer-info">
+                    <h3>About the Developer</h3>
+                    <p>This Career Guidance Quiz was developed by <strong>Aromal BS</strong>, a passionate developer interested in creating tools that help people make informed career decisions.</p>
+                    
+                    <p>The quiz is based on the well-established RIASEC model and provides personalized career suggestions based on your interests and personality traits.</p>
+                    
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/aromal-bs-74b663343?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" class="social-link" target="_blank">
+                            <span class="social-icon">👔</span> LinkedIn
+                        </a>
+                        <a href="https://www.instagram.com/ar._.oz?igsh=bnVha3I0bTJxc20z" class="social-link" target="_blank">
+                            <span class="social-icon">📷</span> Instagram
+                        </a>
+                    </div>
+                    
+                    <button class="btn btn-outline" onclick="openTab('quiz-tab')">Take the Quiz</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="quiz-screen" class="hidden">
+            <h2>Career Guidance Quiz</h2>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress" id="progress"></div>
+                </div>
+            </div>
+            
+            <div class="question" id="question-container">
+                <div id="question-text"></div>
+                <div class="options" id="options-container"></div>
+            </div>
+            
+            <div class="quiz-footer">
+                <div class="quiz-counter" id="question-counter"></div>
+                <button class="btn" onclick="nextQuestion()">Next</button>
+            </div>
+        </div>
+        
+        <div id="results-screen" class="hidden">
+            <h2>Your Career Assessment Results</h2>
+            <div id="results-container"></div>
+            <button class="btn" onclick="location.reload()">Take Test Again</button>
+        </div>
+    </div>
+
+    <script>
+        // Create moving dots
+        function createMovingDots() {
+            const dotsContainer = document.getElementById('moving-dots');
+            const dotCount = 20;
+            
+            for (let i = 0; i < dotCount; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                
+                const size = Math.random() * 15 + 5;
+                dot.style.width = `${size}px`;
+                dot.style.height = `${size}px`;
+                dot.style.left = `${Math.random() * 100}%`;
+                dot.style.top = `${Math.random() * 100}%`;
+                dot.style.animationDelay = `${Math.random() * 5}s`;
+                
+                dotsContainer.appendChild(dot);
+            }
+        }
+        
+        // Theme switcher
+        function toggleTheme() {
+            const body = document.body;
+            if (document.getElementById('theme-toggle').checked) {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Check for saved theme preference or OS preference
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+            document.body.setAttribute('data-theme', 'dark');
+            document.getElementById('theme-toggle').checked = true;
+        }
+
+        // Tab navigation
+        function openTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`.tab-btn[onclick="openTab('${tabId}')"]`).classList.add('active');
+        }
+
+        // Question bank
+        const questions = {
+            realistic: [
+                "Do you enjoy working with your hands, tools, or machines?",
+                "Would you prefer an outdoor job over an office job?",
+                "Do you like fixing, repairing, or building things?",
+                "Would you enjoy working with animals, plants, or nature?",
+                "Do you prefer practical tasks over creative or social activities?",
+                "Would you enjoy operating heavy machinery or vehicles?",
+                "Do you like solving real-world, hands-on problems?",
+                "Would you enjoy being a firefighter, electrician, or construction worker?",
+                "Do you prefer physical activities over sitting at a desk all day?",
+                "Are you interested in working in agriculture, mechanics, or engineering?",
+                "Do you enjoy assembling furniture or equipment?",
+                "Would you like a job maintaining parks or forests?",
+                "Are you interested in learning how engines work?",
+                "Do you enjoy working on DIY home improvement projects?",
+                "Would you prefer a career that involves physical strength and coordination?",
+                "Do you like maintaining or repairing electronics?",
+                "Would you enjoy a job in manufacturing or production?",
+                "Are you interested in welding or metalwork?",
+                "Do you enjoy working with renewable energy systems like solar panels?",
+                "Would you like to learn about plumbing or HVAC systems?"
+            ],
+            investigative: [
+                "Do you enjoy solving puzzles, math problems, or logical challenges?",
+                "Do you like researching and analyzing information?",
+                "Would you enjoy working in a laboratory or conducting experiments?",
+                "Do you prefer working independently on complex problems?",
+                "Are you interested in science, technology, or medical fields?",
+                "Do you enjoy programming, data analysis, or coding?",
+                "Do you prefer reading books or watching documentaries over socializing?",
+                "Are you interested in investigating mysteries or how things work?",
+                "Do you enjoy writing reports, essays, or technical documents?",
+                "Would you like to work as a scientist, doctor, engineer, or researcher?",
+                "Are you curious about space exploration or astronomy?",
+                "Do you enjoy conducting surveys or gathering data?",
+                "Would you like to solve environmental problems through research?",
+                "Are you interested in studying human behavior or genetics?",
+                "Do you enjoy exploring new software or tech gadgets?",
+                "Would you like to analyze climate change data?",
+                "Are you interested in cybersecurity or ethical hacking?",
+                "Do you enjoy experimenting with chemical reactions?",
+                "Would you like to study artificial intelligence or machine learning?",
+                "Are you curious about forensic science or crime scene analysis?"
+            ],
+            artistic: [
+                "Do you enjoy expressing yourself through art, music, or writing?",
+                "Do you like designing, painting, or creating visual content?",
+                "Would you prefer a flexible job over a structured routine?",
+                "Do you enjoy acting, dancing, or performing in front of an audience?",
+                "Are you interested in creating original ideas rather than following strict guidelines?",
+                "Do you enjoy writing poetry, short stories, or scripts?",
+                "Do you like experimenting with new styles in fashion, photography, or music?",
+                "Would you enjoy working as a filmmaker, musician, or game designer?",
+                "Do you like brainstorming new ideas and thinking outside the box?",
+                "Do you prefer emotional, expressive work rather than logical tasks?",
+                "Are you interested in sculpting or crafting unique objects?",
+                "Do you enjoy creating digital art or animations?",
+                "Would you like to design advertisements or marketing campaigns?",
+                "Do you enjoy playing musical instruments or composing songs?",
+                "Are you interested in restoring old artworks or artifacts?",
+                "Would you like to create theater sets or costumes?",
+                "Do you enjoy illustrating books or comics?",
+                "Are you interested in designing user interfaces for apps?",
+                "Would you like to choreograph dances or direct plays?",
+                "Do you enjoy experimenting with mixed media art?"
+            ],
+            social: [
+                "Do you enjoy helping and teaching others?",
+                "Do you prefer working in teams rather than alone?",
+                "Would you like to work in healthcare, education, or counseling?",
+                "Do you feel comfortable talking to and guiding people?",
+                "Are you interested in making a positive impact on people's lives?",
+                "Do you enjoy giving advice or mentoring others?",
+                "Would you prefer working with children, elderly people, or those in need?",
+                "Do you like participating in community service or volunteer work?",
+                "Do you enjoy hosting events, meetings, or gatherings?",
+                "Would you enjoy a career as a teacher, nurse, therapist, or social worker?",
+                "Are you good at resolving conflicts between people?",
+                "Do you enjoy organizing support groups or charity events?",
+                "Would you like to work in disaster relief or emergency services?",
+                "Are you interested in coaching sports or leading youth programs?",
+                "Do you enjoy listening to others and offering emotional support?",
+                "Would you like to train others in workplace skills?",
+                "Are you interested in advocating for social justice?",
+                "Do you enjoy planning community health initiatives?",
+                "Would you like to work with people with disabilities?",
+                "Are you comfortable facilitating group discussions or workshops?"
+            ],
+            enterprising: [
+                "Do you enjoy leading and making decisions?",
+                "Do you like negotiating, selling, or persuading others?",
+                "Would you prefer starting your own business over working for someone else?",
+                "Do you enjoy managing projects, events, or people?",
+                "Are you confident in public speaking and networking?",
+                "Do you like reading about business, marketing, or finance?",
+                "Are you comfortable taking risks for big rewards?",
+                "Do you enjoy debating and discussing different viewpoints?",
+                "Do you like planning and organizing strategies for success?",
+                "Would you enjoy being a CEO, lawyer, politician, or entrepreneur?",
+                "Are you interested in real estate or investment opportunities?",
+                "Do you enjoy motivating teams to achieve goals?",
+                "Would you like to launch a startup or innovative product?",
+                "Are you good at convincing others to support your ideas?",
+                "Do you enjoy competing in business challenges or sales contests?",
+                "Would you like to manage a retail store or franchise?",
+                "Are you interested in corporate law or contract negotiation?",
+                "Do you enjoy developing advertising campaigns?",
+                "Would you like to oversee fundraising efforts for a cause?",
+                "Are you comfortable pitching ideas to investors?"
+            ],
+            conventional: [
+                "Do you enjoy organizing data, files, or schedules?",
+                "Do you prefer following structured rules and procedures?",
+                "Would you enjoy working in finance, banking, or administration?",
+                "Do you like working with numbers, spreadsheets, or detailed information?",
+                "Are you good at maintaining records and keeping things in order?",
+                "Do you enjoy creating systems to organize information?",
+                "Would you prefer a job with clear expectations and routines?",
+                "Do you like working with budgets and financial reports?",
+                "Are you comfortable with repetitive tasks that require precision?",
+                "Would you enjoy being an accountant, auditor, or data analyst?",
+                "Do you enjoy planning events with detailed timelines?",
+                "Are you interested in inventory management or logistics?",
+                "Would you like to work in a library or records office?",
+                "Do you enjoy proofreading documents for accuracy?",
+                "Are you good at following checklists to complete tasks?",
+                "Would you like to manage databases or software systems?",
+                "Are you interested in quality control or process improvement?",
+                "Do you enjoy preparing tax returns or financial statements?",
+                "Would you like to work in payroll or human resources administration?",
+                "Are you comfortable organizing large datasets for analysis?"
+            ]
+        };
+
+        // Career suggestions
+        const careerSuggestions = {
+            realistic: ["Mechanical Engineer", "Electrician", "Construction Worker", "Automotive Technician", "Farmer", "Carpenter"],
+            investigative: ["Scientist", "Software Developer", "Data Analyst", "Medical Doctor", "Research Scientist", "Engineer"],
+            artistic: ["Graphic Designer", "Writer", "Musician", "Actor", "Architect", "Photographer"],
+            social: ["Teacher", "Nurse", "Social Worker", "Counselor", "Psychologist", "Human Resources Specialist"],
+            enterprising: ["Entrepreneur", "Sales Manager", "Marketing Director", "Lawyer", "Real Estate Agent", "Financial Advisor"],
+            conventional: ["Accountant", "Financial Analyst", "Banker", "Administrative Assistant", "Data Entry Clerk", "Auditor"]
+        };
+
+        // Interest subjects
+        const interestSubjects = {
+            realistic: ["Mechanics", "Construction", "Agriculture", "Engineering", "Automotive", "Carpentry"],
+            investigative: ["Mathematics", "Science", "Technology", "Research", "Medicine", "Computers"],
+            artistic: ["Art", "Music", "Writing", "Design", "Photography", "Drama"],
+            social: ["Psychology", "Education", "Sociology", "Counseling", "Healthcare", "Community Service"],
+            enterprising: ["Business", "Marketing", "Finance", "Management", "Economics", "Law"],
+            conventional: ["Accounting", "Administration", "Data Management", "Organization", "Finance", "Office Procedures"]
+        };
+
+        // Course suggestions
+        const courseSuggestions = {
+            realistic: ["Introduction to Mechanical Engineering", "Electrical Circuits", "Construction Basics"],
+            investigative: ["Data Science", "Programming with Python", "Fundamentals of Biology"],
+            artistic: ["Graphic Design", "Creative Writing", "Music Theory"],
+            social: ["Psychology 101", "Foundations of Education", "Sociology Basics"],
+            enterprising: ["Business Management", "Marketing Principles", "Financial Planning"],
+            conventional: ["Accounting Basics", "Office Administration", "Data Management"]
+        };
+
+        // Category descriptions
+        const categoryDescriptions = {
+            realistic: "You enjoy hands-on work, physical activities, and solving practical problems using tools or machinery.",
+            investigative: "You're curious and analytical, enjoying research, problem-solving, and exploring scientific or technical fields.",
+            artistic: "You thrive on creativity, self-expression, and working in flexible environments.",
+            social: "You enjoy helping others, working in teams, and making a positive impact on people's lives.",
+            enterprising: "You like leading, persuading, and taking risks in competitive environments.",
+            conventional: "You prefer organized, structured work with clear rules and attention to detail."
+        };
+
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let scores = {
+            realistic: 0,
+            investigative: 0,
+            artistic: 0,
+            social: 0,
+            enterprising: 0,
+            conventional: 0
+        };
+
+        function startQuiz(numQuestions) {
+            document.getElementById('intro-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            
+            currentQuestions = [];
+            const categories = Object.keys(questions);
+            const questionsPerCategory = Math.floor(numQuestions / categories.length);
+            
+            categories.forEach(category => {
+                const shuffled = [...questions[category]].sort(() => 0.5 - Math.random());
+                const selected = shuffled.slice(0, questionsPerCategory).map(q => ({ text: q, category }));
+                currentQuestions = currentQuestions.concat(selected);
+            });
+            
+            while (currentQuestions.length < numQuestions) {
+                const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+                const remaining = questions[randomCategory].filter(q => !currentQuestions.some(cq => cq.text === q));
+                if (remaining.length > 0) {
+                    currentQuestions.push({ text: remaining[0], category: randomCategory });
+                }
+            }
+            
+            currentQuestions = currentQuestions.sort(() => 0.5 - Math.random());
+            currentQuestionIndex = 0;
+            scores = { realistic: 0, investigative: 0, artistic: 0, social: 0, enterprising: 0, conventional: 0 };
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = currentQuestions[currentQuestionIndex];
+            document.getElementById('question-text').textContent = question.text;
+            document.getElementById('question-counter').textContent = `${currentQuestionIndex + 1}/${currentQuestions.length}`;
+            document.getElementById('progress').style.width = `${((currentQuestionIndex + 1) / currentQuestions.length) * 100}%`;
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = `
+                <div class="option">
+                    <input type="radio" id="yes" name="answer" value="1">
+                    <label for="yes">Yes</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="no" name="answer" value="0">
+                    <label for="no">No</label>
+                </div>
+            `;
+        }
+
+        function nextQuestion() {
+            const selected = document.querySelector('input[name="answer"]:checked');
+            if (!selected) {
+                alert('Please select an answer!');
+                return;
+            }
+
+            const answer = parseInt(selected.value);
+            const currentQuestion = currentQuestions[currentQuestionIndex];
+            scores[currentQuestion.category] += answer;
+
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuestions.length) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+            
+            const resultsContainer = document.getElementById('results-container');
+            resultsContainer.innerHTML = '';
+
+            const categoryTotals = {};
+            currentQuestions.forEach(q => {
+                categoryTotals[q.category] = (categoryTotals[q.category] || 0) + 1;
+            });
+
+            const percentages = {};
+            let totalScore = 0;
+            for (const category in scores) {
+                percentages[category] = categoryTotals[category] > 0 ? (scores[category] / categoryTotals[category]) * 100 : 0;
+                totalScore += percentages[category];
+            }
+
+            const normalizedPercentages = {};
+            for (const category in percentages) {
+                normalizedPercentages[category] = totalScore > 0 ? (percentages[category] / totalScore) * 100 : 16.67;
+            }
+
+            const sortedCategories = Object.keys(scores)
+                .filter(category => percentages[category] > 0) // Only include categories with > 0%
+                .sort((a, b) => normalizedPercentages[b] - normalizedPercentages[a]); // Sort by normalized percentages
+            const topCategory = sortedCategories[0] || null;
+
+            if (sortedCategories.length === 0) {
+                resultsContainer.innerHTML = `
+                    <p>It seems you didn't show interest in any category. Try taking the quiz again with different answers!</p>
+                `;
+                return;
+            }
+
+            resultsContainer.innerHTML += `
+                <p>Based on your answers, here's how your interests align with the RIASEC model. The pie chart and descriptions show your preference distribution across categories with interest.</p>
+            `;
+
+            // Pie chart (only for categories with > 0%)
+            const chartContainer = document.createElement('div');
+            chartContainer.className = 'chart-container';
+            const pieChart = document.createElement('div');
+            pieChart.className = 'pie-chart';
+
+            let cumulativePercentage = 0;
+            const colors = {
+                realistic: 'var(--primary)',
+                investigative: 'var(--secondary)',
+                artistic: 'var(--accent)',
+                social: 'var(--success)',
+                enterprising: 'var(--primary-light)',
+                conventional: '#95E1D3'
+            };
+            const conicGradient = sortedCategories.map(category => {
+                const start = cumulativePercentage;
+                const end = cumulativePercentage + normalizedPercentages[category];
+                cumulativePercentage = end;
+                return `${colors[category]} ${start}% ${end}%`;
+            }).join(', ');
+            pieChart.style.background = `conic-gradient(${conicGradient})`;
+
+            chartContainer.appendChild(pieChart);
+
+            const legend = document.createElement('div');
+            legend.className = 'chart-legend';
+            sortedCategories.forEach(category => {
+                const item = document.createElement('div');
+                item.className = 'legend-item';
+                item.innerHTML = `
+                    <span class="legend-color" style="background-color: ${colors[category]};"></span>
+                    ${category.charAt(0).toUpperCase() + category.slice(1)}: ${Math.round(normalizedPercentages[category])}%
+                `;
+                legend.appendChild(item);
+            });
+            chartContainer.appendChild(legend);
+            resultsContainer.appendChild(chartContainer);
+
+            // Detailed results (only for categories with > 0%, using normalized percentages)
+            sortedCategories.forEach(category => {
+                const isTop = category === topCategory;
+                const percentage = Math.round(normalizedPercentages[category]);
+                const resultDiv = document.createElement('div');
+                resultDiv.className = `result-category ${isTop ? 'top-result' : ''}`;
+                
+                resultDiv.innerHTML = `
+                    <div class="result-header">
+                        <h3>${category.charAt(0).toUpperCase() + category.slice(1)} (${percentage}%)</h3>
+                    </div>
+                    <p class="result-description">${categoryDescriptions[category]}</p>
+                    <p><strong>Career Options:</strong></p>
+                    <ul class="career-list">
+                        ${careerSuggestions[category].map(career => `<li class="career-item">${career}</li>`).join('')}
+                    </ul>
+                    <p><strong>Interest Subjects:</strong> ${interestSubjects[category].join(', ')}</p>
+                    <p><strong>Suggested Courses:</strong> ${courseSuggestions[category].join(', ')}</p>
+                `;
+                resultsContainer.appendChild(resultDiv);
+            });
+        }
+
+        // Initialize
+        window.onload = function() {
+            createMovingDots();
+        };
+    </script>
+</body>
+</html>
